@@ -1,0 +1,17 @@
+# 为了适配 SpringFox
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+# http://127.0.0.1:9011/api/docs/swagger-ui/index.html
+springfox:
+  documentation:
+    auto-startup: true
+    enabled: true
+    swagger-ui:
+      base-url: docs
+
+logging:
+  level:
+    net.foundation.business: debug
