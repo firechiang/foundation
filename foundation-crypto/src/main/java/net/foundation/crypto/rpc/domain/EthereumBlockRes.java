@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class EthereumBlockInfo extends JsonRpcResponse {
+public class EthereumBlockRes extends JsonRpcResponse {
 
 	private Result result;
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class EthereumTransactionReceiptInfo extends JsonRpcResponse {
+public class EthereumTransactionReceiptRes extends JsonRpcResponse {
 
 	private Result result;
 

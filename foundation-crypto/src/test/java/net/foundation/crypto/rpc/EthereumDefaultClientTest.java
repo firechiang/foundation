@@ -1,6 +1,7 @@
 package net.foundation.crypto.rpc;
 
-import net.foundation.crypto.rpc.domain.EthereumBlockInfo;
+import net.foundation.crypto.rpc.domain.EthereumBlockRes;
+import net.foundation.crypto.rpc.domain.EthereumTransactionRes;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.List;
 
 public class EthereumDefaultClientTest {
 
@@ -46,8 +48,14 @@ public class EthereumDefaultClientTest {
 
     @Test
     public void getBlockByNumber() {
-        EthereumBlockInfo blockInfo = api.getBlockByNumber(15560000l);
+        EthereumBlockRes blockInfo = api.getBlockByNumber(15560000l);
         System.err.println(blockInfo.getResult().getTransactions().size());
+    }
+
+    @Test
+    public void getTransactionByHash() {
+        EthereumTransactionRes transactionRes = api.getTransactionByHash("0x1cf6e7d55a91af7da03ee13926b2570929349f9028838c32ed9d049c8d20d2ad");
+        System.err.println(transactionRes);
     }
 
     private static InetSocketAddress telnet() {

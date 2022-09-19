@@ -1,7 +1,8 @@
 package net.foundation.crypto.rpc;
 
-import net.foundation.crypto.rpc.domain.EthereumBlockInfo;
-import net.foundation.crypto.rpc.domain.EthereumTransactionReceiptInfo;
+import net.foundation.crypto.rpc.domain.EthereumBlockRes;
+import net.foundation.crypto.rpc.domain.EthereumTransactionReceiptRes;
+import net.foundation.crypto.rpc.domain.EthereumTransactionRes;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -9,6 +10,8 @@ import java.math.BigInteger;
 public interface EthereumInterface {
     // 获取指定高度区块信息
     String Eth_GetBlockByNumber = "eth_getBlockByNumber";
+    // 获取指定交易信息
+    String Eth_GetTransactionByHash = "eth_getTransactionByHash";
     // 发送已签名交易
     String Eth_SendRawTransaction = "eth_sendRawTransaction";
     // 获取指定地址交易数量
@@ -52,13 +55,19 @@ public interface EthereumInterface {
      * @param blockNum 区块高度
      * @return
      */
-    EthereumBlockInfo getBlockByNumber(Long blockNum);
+    EthereumBlockRes getBlockByNumber(Long blockNum);
     /**
-     * 获取指定交易收据（注意待定交易没有收据）
-     * @param txhash 交易 hash
+     * 获取指定交易信息
+     * @param txHash
      * @return
      */
-    EthereumTransactionReceiptInfo getTransactionReceipt(String txhash);
+    EthereumTransactionRes getTransactionByHash(String txHash);
+    /**
+     * 获取指定交易收据（注意待定交易没有收据）
+     * @param txHash 交易 hash
+     * @return
+     */
+    EthereumTransactionReceiptRes getTransactionReceipt(String txHash);
 
     /**
      * 发送已签名交易

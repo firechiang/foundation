@@ -79,17 +79,27 @@ public class EthereumDefaultClient implements EthereumInterface {
      * @return
      */
     @Override
-    public EthereumBlockInfo getBlockByNumber(Long blockNum) {
-        return execRequest(Eth_GetBlockByNumber,Arrays.asList("0x"+Long.toHexString(blockNum),true), EthereumBlockInfo.class);
+    public EthereumBlockRes getBlockByNumber(Long blockNum) {
+        return execRequest(Eth_GetBlockByNumber,Arrays.asList("0x"+Long.toHexString(blockNum),true), EthereumBlockRes.class);
     }
     /**
      * 获取指定交易收据（注意待定交易没有收据）
-     * @param txhash 交易 hash
+     * @param txHash 交易 hash
      * @return
      */
     @Override
-    public EthereumTransactionReceiptInfo getTransactionReceipt(String txhash) {
-        return execRequest(Eth_GetTransactionReceipt, Arrays.asList(txhash), EthereumTransactionReceiptInfo.class);
+    public EthereumTransactionReceiptRes getTransactionReceipt(String txHash) {
+        return execRequest(Eth_GetTransactionReceipt, Arrays.asList(txHash), EthereumTransactionReceiptRes.class);
+    }
+
+    /**
+     * 获取指定交易信息
+     * @param txHash
+     * @return
+     */
+    @Override
+    public EthereumTransactionRes getTransactionByHash(String txHash) {
+        return execRequest(Eth_GetTransactionByHash, Arrays.asList(txHash), EthereumTransactionRes.class);
     }
 
     private BigInteger hexToBigInteger(String hex) {
