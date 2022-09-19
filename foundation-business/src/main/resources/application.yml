@@ -1,0 +1,3 @@
+mq:
+  topic:
+    blockchain-transaction-topic: Blockchain_Transaction_Topic
