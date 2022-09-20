@@ -1,5 +1,5 @@
-# 为了适配 SpringFox
 spring:
+  # 为适配 SpringFox
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
@@ -14,4 +14,4 @@ springfox:
 
 logging:
   level:
-    net.foundation.mbusiness: debug
+    net.foundation.mbusiness.mapper: debug

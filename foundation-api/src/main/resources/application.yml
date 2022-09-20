@@ -29,6 +29,17 @@ spring:
     resources:
       add-mappings: false
 
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*Mapper.xml
+  typeAliasesPackage: net.foundation.mbusiness.domain
+  global-config:
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
 springfox:
   documentation:
     auto-startup: false
