@@ -18,10 +18,6 @@ public class BlockchainTransaction {
     @TableId(type= IdType.AUTO)
     private Long id;
     /**
-     * 链ID
-     */
-    private Integer chainId;
-    /**
      * 链上交易ID
      */
     private String txHash;

@@ -17,6 +17,10 @@ public class BlockchainContract {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
+     * 合约地址
+     */
+    private String addr;
+    /**
      * 名称
      */
     private String name;
@@ -29,7 +33,7 @@ public class BlockchainContract {
      */
     private Integer decimals;
     /**
-     *
+     * 合约编码
      */
     private String abi;
     /**

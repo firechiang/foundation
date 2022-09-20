@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 区块链数据
+ * 区块链信息数据
  */
 @Data
 @TableName("f_blockchain")
