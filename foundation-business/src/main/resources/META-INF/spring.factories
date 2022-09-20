@@ -1,2 +1,2 @@
 # Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=net.foundation.business.BusinessAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=net.foundation.mbusiness.BusinessAutoConfiguration

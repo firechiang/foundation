@@ -4,16 +4,6 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
 
-rocketmq:
-  name-server: 127.0.0.1:9876
-  producer:
-    tls-enable: false
-    group: producer-group-1
-    send-message-timeout: 15000
-  consumer:
-    tls-enable: false
-    group: consumer-group-1
-
 # http://127.0.0.1:9011/api/docs/swagger-ui/index.html
 springfox:
   documentation:
@@ -24,4 +14,4 @@ springfox:
 
 logging:
   level:
-    net.foundation.business: debug
+    net.foundation.mbusiness: debug

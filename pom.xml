@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
         <swagger-annotations.version>1.5.20</swagger-annotations.version>
-        <rocketmq-spring-boot-starter.version>2.2.2</rocketmq-spring-boot-starter.version>
+        <rocketmq-spring-boot-starter.version>2.2.0</rocketmq-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +63,8 @@
         <module>foundation-api</module>
         <module>foundation-business</module>
         <module>foundation-crypto</module>
+        <module>foundation-fetch</module>
+        <module>foundation-flowline</module>
     </modules>
 
 </project>
