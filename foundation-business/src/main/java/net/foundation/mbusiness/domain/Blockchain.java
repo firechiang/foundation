@@ -8,30 +8,26 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 区块链智能合约数据
+ * 区块链数据
  */
 @Data
-@TableName("f_blockchain_contract")
-public class BlockchainContract {
+@TableName("f_blockchain")
+public class Blockchain {
 
-    @TableId(type = IdType.AUTO)
-    private Long id;
+    @TableId(type= IdType.AUTO)
+    private Integer id;
     /**
-     * 名称
+     * 链ID
      */
-    private String name;
+    private Integer chainId;
     /**
-     * 简称
+     * 接口地址
      */
-    private String symbol;
+    private String rpcUrl;
     /**
-     * 精度
+     * 区块浏览器地址
      */
-    private Integer decimals;
-    /**
-     *
-     */
-    private String abi;
+    private String  explorerUrl;
     /**
      * 创建时间
      */
