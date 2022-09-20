@@ -22,6 +22,10 @@ public class BlockchainTransaction {
      */
     private Integer chainId;
     /**
+     * 链上交易ID
+     */
+    private String txHash;
+    /**
      * 转出地址
      */
     private String form;
