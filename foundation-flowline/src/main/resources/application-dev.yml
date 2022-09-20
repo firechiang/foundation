@@ -1,9 +1,0 @@
-rocketmq:
-  name-server: 127.0.0.1:9876
-  consumer:
-    tls-enable: false
-    group: consumer-group-1
-
-logging:
-  level:
-    net.foundation.mflowline: debug
