@@ -2,11 +2,9 @@ package net.foundation.mbusiness.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.foundation.mbusiness.domain.BlockchainContract;
+import net.foundation.mbusiness.domain.BlockchainContractInfo;
 
 public interface BlockchainContractService extends IService<BlockchainContract> {
 
-    BlockchainContract queryCacheByAddress(String contractAddr);
-
-    void cache(BlockchainContract bc);
-
+    BlockchainContractInfo queryCacheByAddress(String contractAddr);
 }
