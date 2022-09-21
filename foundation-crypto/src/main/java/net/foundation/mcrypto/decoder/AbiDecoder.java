@@ -2,9 +2,6 @@ package net.foundation.mcrypto.decoder;
 
 import org.bouncycastle.util.encoders.Hex;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +13,8 @@ public class AbiDecoder {
 
     Map<String, AbiDefinition.Entry> methodSignatures = new HashMap<>();
 
-    public AbiDecoder(String abiFilePath) throws IOException {
-        this.abi = AbiDefinition.fromJson(Files.readString(Path.of(abiFilePath)));
+    public AbiDecoder(String jsonStr) {
+        this.abi = AbiDefinition.fromJson(jsonStr);
         for (AbiDefinition.Entry entry : this.abi) {
             String hexEncodedMethodSignature = Hex.toHexString(entry.encodeSignature());
             String hexEncodedMethodSignaturePrefix = hexEncodedMethodSignature.substring(0, 8);

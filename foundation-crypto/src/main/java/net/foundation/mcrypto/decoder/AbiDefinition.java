@@ -3,16 +3,13 @@ package net.foundation.mcrypto.decoder;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import net.foundation.mcrypto.utils.ByteUtil;
 import net.foundation.mcrypto.utils.HashUtil;
+import net.foundation.mcrypto.utils.JsonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,24 +22,13 @@ import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.commons.lang3.StringUtils.stripEnd;
 
 public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
-    private final static ObjectMapper DEFAULT_MAPPER = new ObjectMapper()
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL);
 
     public static AbiDefinition fromJson(String json) {
-        try {
-            return DEFAULT_MAPPER.readValue(json, AbiDefinition.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return JsonUtil.parseObject(json, AbiDefinition.class);
     }
 
     public String toJson() {
-        try {
-            return new ObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return JsonUtil.toJSONString(this);
     }
 
     private <T extends Entry> T find(Class<T> resultClass, final Entry.Type type, final Predicate<T> searchPredicate) {

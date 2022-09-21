@@ -10,6 +10,7 @@ public class JsonUtil {
     static {
         OM = new ObjectMapper();
         OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OM.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL,true);
     }
 
     public static final <T> T parseObject(String content, Class<T> valueType) {
