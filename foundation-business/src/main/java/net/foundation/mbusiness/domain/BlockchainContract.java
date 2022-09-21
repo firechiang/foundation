@@ -25,6 +25,10 @@ public class BlockchainContract {
      */
     private String name;
     /**
+     * 合约类型
+     */
+    private Integer ctype;
+    /**
      * 简称
      */
     private String symbol;
