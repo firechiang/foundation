@@ -5,4 +5,6 @@ import net.foundation.mbusiness.domain.Blockchain;
 
 public interface BlockchainService extends IService<Blockchain> {
 
+    Blockchain queryCacheByChainId(Integer chainId);
+
 }
