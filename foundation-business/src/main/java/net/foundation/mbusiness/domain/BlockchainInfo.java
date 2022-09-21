@@ -1,20 +1,12 @@
 package net.foundation.mbusiness.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
-/**
- * 区块链信息数据
- */
 @Data
-@TableName("f_blockchain")
-public class Blockchain {
+public class BlockchainInfo {
 
-    @TableId(type= IdType.AUTO)
     private Integer id;
     /**
      * 链ID
@@ -35,9 +27,5 @@ public class Blockchain {
     /**
      * 精度
      */
-    private Integer decimals;
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+    private BigDecimal decimalsPow;
 }

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @MapperScan("net.foundation.mbusiness.mapper*")
-@ComponentScan(basePackages = {"net.foundation.mbusiness.service.impl"})
+@ComponentScan(basePackages = {"net.foundation.mbusiness.service"})
 public class BusinessAutoConfiguration {
 
 }

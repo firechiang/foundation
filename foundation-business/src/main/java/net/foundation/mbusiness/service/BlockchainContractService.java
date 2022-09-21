@@ -7,4 +7,6 @@ import net.foundation.mbusiness.domain.BlockchainContractInfo;
 public interface BlockchainContractService extends IService<BlockchainContract> {
 
     BlockchainContractInfo queryCacheByAddress(String contractAddr);
+
+    void removeCache(String contractAddr);
 }

@@ -77,4 +77,6 @@ public interface EthereumInterface {
     default String sendRawTransaction(String hex) {
         return null;
     }
+
+    BigInteger hexToBigInteger(String hex);
 }

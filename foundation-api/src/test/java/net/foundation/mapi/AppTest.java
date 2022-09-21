@@ -1,4 +1,4 @@
-package net.foundation.mbusiness;
+package net.foundation.mapi;
 
 import org.junit.jupiter.api.Test;
 

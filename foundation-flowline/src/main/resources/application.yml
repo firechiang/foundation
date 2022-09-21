@@ -42,4 +42,5 @@ mybatis-plus:
 # 消息主题配置
 mq:
   topic:
-    blockchain-transaction-topic: Blockchain_Transaction_Topic
+    blockchain-transaction-topic-1: Blockchain_Transaction_Topic_1
+    blockchain-transaction-topic-2: Blockchain_Transaction_Topic_2

@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>net.foundation</groupId>
-            <artifactId>foundation-business</artifactId>
+            <artifactId>foundation-mq</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -42,10 +42,6 @@
                     <artifactId>undertow-websockets-jsr</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

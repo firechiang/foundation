@@ -102,7 +102,8 @@ public class EthereumDefaultClient implements EthereumInterface {
         return execRequest(Eth_GetTransactionByHash, Arrays.asList(txHash), EthereumTransactionRes.class);
     }
 
-    private BigInteger hexToBigInteger(String hex) {
+    @Override
+    public BigInteger hexToBigInteger(String hex) {
         return new BigInteger(hex.substring(2), 16);
     }
 

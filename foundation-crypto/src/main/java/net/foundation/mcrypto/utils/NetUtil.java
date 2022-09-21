@@ -10,7 +10,7 @@ public class NetUtil {
         Socket socket = new Socket();
         try {
             InetSocketAddress inetSocketAddress = new InetSocketAddress("127.0.0.1", 58591);
-            socket.connect(inetSocketAddress, 200);
+            socket.connect(inetSocketAddress, 10);
             if (socket.isConnected()) {
                 return inetSocketAddress;
             }

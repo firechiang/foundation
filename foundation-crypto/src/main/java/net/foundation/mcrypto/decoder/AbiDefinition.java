@@ -15,7 +15,6 @@ import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 import static java.lang.String.format;
-import static net.foundation.mcrypto.decoder.SolidityType.IntType.decodeInt;
 import static org.apache.commons.collections4.ListUtils.select;
 import static org.apache.commons.lang3.ArrayUtils.subarray;
 import static org.apache.commons.lang3.StringUtils.join;
@@ -136,7 +135,7 @@ public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
                 int offset = 0;
                 for (Param param : params) {
                     Object decoded = param.type.isDynamicType()
-                            ? param.type.decode(encoded, decodeInt(encoded, offset).intValue())
+                            ? param.type.decode(encoded, SolidityType.IntType.decodeInt(encoded, offset).intValue())
                             : param.type.decode(encoded, offset);
                     result.add(decoded);
 

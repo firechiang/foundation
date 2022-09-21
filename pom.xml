@@ -39,6 +39,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>net.foundation</groupId>
+                <artifactId>foundation-mq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>${rocketmq-spring-boot-starter.version}</version>
@@ -95,6 +100,7 @@
         <module>foundation-crypto</module>
         <module>foundation-fetch</module>
         <module>foundation-flowline</module>
+        <module>foundation-mq</module>
     </modules>
 
 </project>
