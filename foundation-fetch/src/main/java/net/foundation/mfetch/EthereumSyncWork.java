@@ -68,6 +68,7 @@ public class EthereumSyncWork {
         bti.setForm(info.getFrom());
         bti.setTo(info.getTo());
         bti.setTxHash(info.getHash());
+        bti.setInput(info.getInput());
         bti.setAmount(new BigDecimal(api.hexToBigInteger(info.getValue())).divide(blockchain.getDecimalsPow()).setScale(8, RoundingMode.DOWN));
         return bti;
     }

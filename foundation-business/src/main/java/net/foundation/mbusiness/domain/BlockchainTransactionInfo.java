@@ -10,4 +10,6 @@ import lombok.ToString;
 public class BlockchainTransactionInfo extends BlockchainTransaction {
 
     private Integer chainId;
+
+    private String input;
 }
