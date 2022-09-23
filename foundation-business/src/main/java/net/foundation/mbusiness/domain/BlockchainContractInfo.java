@@ -25,4 +25,6 @@ public class BlockchainContractInfo {
     private Integer decimals;
 
     private AbiDecoder abiDecoder;
+
+    private boolean loadDisk;
 }

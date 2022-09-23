@@ -33,6 +33,7 @@ public class BlockchainContractServiceImpl extends ServiceImpl<BlockchainContrac
                 var query = Wrappers.lambdaQuery(BlockchainContract.class).eq(BlockchainContract::getAddr,contractAddr);
                 BlockchainContract bc = service.getOne(query);
                 BlockchainContractInfo info = new BlockchainContractInfo();
+                info.setLoadDisk(true);
                 if(Objects.nonNull(bc)) {
                     BeanUtils.copyProperties(bc,info);
                     if(StringUtils.isNoneBlank(bc.getAbi())) {

@@ -1,6 +1,7 @@
 package net.foundation.mfetch;
 
 import lombok.extern.slf4j.Slf4j;
+import net.foundation.mbusiness.domain.Blockchain;
 import net.foundation.mbusiness.domain.BlockchainInfo;
 import net.foundation.mbusiness.domain.BlockchainTransactionInfo;
 import net.foundation.mbusiness.service.BlockchainService;
@@ -30,6 +31,8 @@ public class EthereumSyncWork {
 
     private volatile long oldHeight = 0;
 
+    private int maxInputLength = 1024 * 2;
+
     public EthereumSyncWork(BlockTransactionQueue blockTransactionQueue, BlockchainService blockchainService, BlockchainInfo blockchain) {
         this.blockTransactionQueue = blockTransactionQueue;
         this.blockchainService = blockchainService;
@@ -51,9 +54,8 @@ public class EthereumSyncWork {
             if (oldHeight != newHeight) {
                 List<BlockchainTransactionInfo> bts = res.getResult().getTransactions().stream().map(this::toBlockchainTransaction).collect(Collectors.toList());
                 log.info("Ethereum height: {},blockCount: 1,transaction: {}",newHeight,bts.size());
-                for(BlockchainTransactionInfo info:bts) {
-                    blockTransactionQueue.push(info);
-                }
+                blockTransactionQueue.push(bts);
+                saveLastHeight(oldHeight);
             }
             oldHeight++;
         }
@@ -68,7 +70,7 @@ public class EthereumSyncWork {
         bti.setForm(info.getFrom());
         bti.setTo(info.getTo());
         bti.setTxHash(info.getHash());
-        bti.setInput(info.getInput());
+        bti.setInput(checkInput(info.getInput()));
         bti.setAmount(new BigDecimal(api.hexToBigInteger(info.getValue())).divide(blockchain.getDecimalsPow()).setScale(8, RoundingMode.DOWN));
         return bti;
     }
@@ -83,4 +85,24 @@ public class EthereumSyncWork {
     private EthereumDefaultClient getEthereumDefaultClient() {
         return new EthereumDefaultClient(this.blockchain.getRpcUrl(), NetUtil.telnetProxy());
     }
+
+    private void saveLastHeight(long oldHeight) {
+        if(oldHeight % 10l == 0) {
+            Blockchain bc = new Blockchain();
+            bc.setId(this.blockchain.getId());
+            bc.setLastHeight(oldHeight);
+            this.blockchainService.updateById(bc);
+        }
+    }
+
+    private String checkInput(String input) {
+        if(Objects.nonNull(input)) {
+            int length = input.length();
+            if(length > maxInputLength || (length - 10) % 64 != 0) {
+                return null;
+            }
+        }
+        return input;
+    }
 }
+
