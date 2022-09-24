@@ -11,7 +11,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 import static java.lang.String.format;
@@ -81,6 +83,8 @@ public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
                                    @JsonProperty("outputs") List<Param> outputs,
                                    @JsonProperty("type") Type type,
                                    @JsonProperty(value = "payable", required = false, defaultValue = "false") Boolean payable) {
+            inputs = Objects.isNull(inputs) ? Collections.emptyList() : inputs;
+            outputs = Objects.isNull(outputs) ? Collections.emptyList() : outputs;
             Entry result = null;
             switch (type) {
                 case constructor:

@@ -107,7 +107,9 @@ public class BlockTransactionParserInputListener implements RocketMQListener<Blo
             AbiDecoder abiDecoder = bci.getAbiDecoder();
             if (Objects.nonNull(bci.getAbiDecoder())) {
                 DecodedFunctionCall decodedFunctionCall = abiDecoder.decodeFunctionCall(bti.getInput());
-                bti.setMethod(decodedFunctionCall.getName());
+                if(Objects.nonNull(decodedFunctionCall)) {
+                    bti.setMethod(decodedFunctionCall.getName());
+                }
             }
         } catch(Exception e) {
             log.error("Decoder blockchain transaction input!",e);
