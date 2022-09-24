@@ -1,42 +1,22 @@
 package net.foundation.mcrypto.parser;
 
-import net.foundation.mcrypto.parser.domain.ContractInfo;
+import net.foundation.mcrypto.parser.domain.ContractAddressInfo;
+import net.foundation.mcrypto.parser.domain.ContractTokenInfo;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.Objects;
 
-public class ExplorerParserContract extends ExplorerParserAbstract implements ExplorerParser<ContractInfo> {
-
-    @Override
-    public ContractInfo parse(String explorerUrl,String address) {
-        ContractInfo info = new ContractInfo();
-        // 解析Address信息
-        parseToken(explorerUrl,address,info);
-        // 解析Token信息
-        parseAddress(explorerUrl,address,info);
-        return info;
-    }
-
-    /**
-     * 解析合约Abi
-     * @param explorerUrl
-     * @param addr
-     * @return
-     */
-    public String parseAbi(String explorerUrl,String addr) {
-        String url = String.join("/",explorerUrl,"address",addr);
-        Document document = getBrowser(url);
-        return parseAbi(document);
-    }
+public class ExplorerParserContract extends ExplorerParserAbstract {
 
     /**
      * 解析Address信息
+     * @param explorerUrl
      * @param addr
-     * @param info
      */
-    private void parseAddress(String explorerUrl,String addr,ContractInfo info) {
+    public ContractAddressInfo parseAddress(String explorerUrl,String addr) {
+        ContractAddressInfo info = new ContractAddressInfo();
         String url = String.join("/",explorerUrl,"address",addr);
         Document document = getBrowser(url);
         // 解析合约Abi
@@ -46,14 +26,17 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
             // 解析合约名称
             parseName(elements.get(1),info);
         }
+        return info;
     }
 
     /**
      * 解析Token信息
+     * @param explorerUrl
      * @param addr
-     * @param info
+     * @return
      */
-    private void parseToken(String explorerUrl,String addr,ContractInfo info) {
+    public ContractTokenInfo parseToken(String explorerUrl,String addr) {
+        ContractTokenInfo info = new ContractTokenInfo();
         String url = String.join("/",explorerUrl,"token",addr);
         Document document = getBrowser(url);
         Elements elements = parseTables(document);
@@ -63,6 +46,7 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
             // 解析合约精度
             parseDecimals(elements.get(1),info);
         }
+        return info;
     }
 
     private Elements parseTables(Document document) {
@@ -84,7 +68,7 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
      * @param element
      * @param info
      */
-    public void parseType(Element element,ContractInfo info) {
+    public void parseType(Element element,ContractTokenInfo info) {
         Element headerTitle = element.selectFirst(".card-header-title");
         if(headerTitle.childrenSize() > 0) {
             String contractType = headerTitle.child(0).text();
@@ -99,7 +83,7 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
      * @param element
      * @param info
      */
-    public void parseDecimals(Element element,ContractInfo info) {
+    public void parseDecimals(Element element,ContractTokenInfo info) {
         Element headerDecimals = element.selectFirst("#ContentPlaceHolder1_trDecimals");
         if(Objects.nonNull(headerDecimals)) {
             Element decimalsEl = headerDecimals.selectFirst(".col-md-8");
@@ -117,7 +101,7 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
      * @param element
      * @param info
      */
-    private void parseName(Element element,ContractInfo info) {
+    private void parseName(Element element,ContractAddressInfo info) {
         Element headerDecimals = element.selectFirst("#ContentPlaceHolder1_tr_tokeninfo");
         if(Objects.nonNull(headerDecimals)) {
             Element nameEl = headerDecimals.selectFirst(".col-md-8");

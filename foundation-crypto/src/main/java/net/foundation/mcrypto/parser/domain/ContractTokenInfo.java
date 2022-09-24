@@ -3,13 +3,9 @@ package net.foundation.mcrypto.parser.domain;
 import lombok.Data;
 
 @Data
-public class ContractInfo {
-
-    private String name;
+public class ContractTokenInfo {
 
     private String ctype;
 
     private Integer decimals;
-
-    private String abi;
 }

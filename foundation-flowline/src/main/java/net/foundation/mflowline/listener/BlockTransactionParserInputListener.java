@@ -1,23 +1,20 @@
-package net.foundation.mflowline;
+package net.foundation.mflowline.listener;
 
 import lombok.extern.slf4j.Slf4j;
-import net.foundation.mbusiness.domain.*;
+import net.foundation.mbusiness.domain.BlockchainContractInfo;
+import net.foundation.mbusiness.domain.BlockchainContractTypeInfo;
+import net.foundation.mbusiness.domain.BlockchainTransactionInfo;
 import net.foundation.mbusiness.service.BlockchainContractService;
 import net.foundation.mbusiness.service.BlockchainContractTypeService;
-import net.foundation.mbusiness.service.BlockchainService;
 import net.foundation.mcrypto.decoder.AbiDecoder;
 import net.foundation.mcrypto.decoder.DecodedFunctionCall;
-import net.foundation.mcrypto.parser.ExplorerParserContract;
-import net.foundation.mcrypto.parser.domain.ContractInfo;
 import net.foundation.mmq.queue.BlockTransactionQueue;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.Objects;
 
 import static net.foundation.mmq.MQConstant.Path_Blockchain_Transaction_Topic_1;
@@ -35,9 +32,6 @@ public class BlockTransactionParserInputListener implements RocketMQListener<Blo
     private String topicName;
 
     @Autowired
-    private BlockchainService blockchainService;
-
-    @Autowired
     private BlockTransactionQueue blockTransactionQueue;
 
     @Autowired
@@ -50,59 +44,11 @@ public class BlockTransactionParserInputListener implements RocketMQListener<Blo
     public void onMessage(BlockchainTransactionInfo bti) {
         if(Objects.nonNull(bti.getInput())) {
             bti.setContract(bti.getTo());
-            BlockchainContractInfo bci = this.getContractInfo(bti.getChainId(),bti.getContract());
+            BlockchainContractInfo bci = blockchainContractService.queryCacheByAddress(bti.getContract());
             decoderInput(bti,bci);
             bti.setInput(null);
         }
         blockTransactionQueue.push(topicName,bti);
-    }
-
-    private BlockchainContractInfo getContractInfo(Integer chainId,String contractAddr) {
-        try {
-            BlockchainContractInfo contractInfo = blockchainContractService.queryCacheByAddress(contractAddr);
-            // 数据库不存在合约信息
-            if (Objects.isNull(contractInfo.getId())) {
-                contractInfo.setAddr(contractAddr);
-                BlockchainInfo blockchainInfo = blockchainService.queryCacheByChainId(chainId);
-                loadExplorerContract(contractInfo, blockchainInfo.getExplorerUrl());
-            // 数据库存在合约信息但是没有ABI
-            } else if (contractInfo.isLoadDisk() && Objects.isNull(contractInfo.getAbiDecoder())) {
-                BlockchainInfo blockchainInfo = blockchainService.queryCacheByChainId(chainId);
-                loadExplorerABI(contractInfo, blockchainInfo.getExplorerUrl());
-            }
-            return contractInfo;
-        } catch(Exception e) {
-            log.error("Get blockchain contract info!",e);
-        }
-        return new BlockchainContractInfo();
-    }
-
-    private void loadExplorerContract(BlockchainContractInfo contractInfo,String explorerUrl) {
-        ExplorerParserContract epc = new ExplorerParserContract();
-        ContractInfo parse = epc.parse(explorerUrl, contractInfo.getAddr());
-        BlockchainContract bc = new BlockchainContract();
-        bc.setAbi(parse.getAbi());
-        bc.setAddr(contractInfo.getAddr());
-        bc.setCtype(parse.getCtype());
-        bc.setDecimals(parse.getDecimals());
-        bc.setName(parse.getName());
-        bc.setCreateTime(new Date());
-        blockchainContractService.saveIgnore(bc);
-        BeanUtils.copyProperties(bc,contractInfo);
-        contractInfo.setAbiDecoder(AbiDecoder.create(bc.getAbi()));
-    }
-
-    private void loadExplorerABI(BlockchainContractInfo contractInfo,String explorerUrl) {
-        ExplorerParserContract epc = new ExplorerParserContract();
-        String abi = epc.parseAbi(explorerUrl, contractInfo.getAddr());
-        contractInfo.setAbiDecoder(AbiDecoder.create(abi));
-        if(Objects.nonNull(contractInfo.getAbiDecoder())) {
-            BlockchainContract bc = new BlockchainContract();
-            bc.setId(contractInfo.getId());
-            bc.setAbi(abi);
-            blockchainContractService.updateById(bc);
-            contractInfo.setLoadDisk(false);
-        }
     }
 
     private void decoderInput(BlockchainTransactionInfo bti,BlockchainContractInfo bci) {

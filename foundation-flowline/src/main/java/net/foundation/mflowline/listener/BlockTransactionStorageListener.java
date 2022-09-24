@@ -1,4 +1,4 @@
-package net.foundation.mflowline;
+package net.foundation.mflowline.listener;
 
 import net.foundation.mbusiness.domain.BlockchainTransactionInfo;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -6,7 +6,6 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
 
 import static net.foundation.mmq.MQConstant.Path_Blockchain_Transaction_Topic_2;
-
 
 
 /**

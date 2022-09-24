@@ -1,4 +1,4 @@
-package net.foundation.mfetch;
+package net.foundation.mfetch.work;
 
 import lombok.extern.slf4j.Slf4j;
 import net.foundation.mbusiness.domain.Blockchain;
@@ -33,7 +33,7 @@ public class EthereumSyncWork {
 
     private String topicName;
 
-    public EthereumSyncWork(BlockTransactionQueue blockTransactionQueue, BlockchainService blockchainService, BlockchainInfo blockchain,String topicName) {
+    public EthereumSyncWork(BlockTransactionQueue blockTransactionQueue, BlockchainService blockchainService, BlockchainInfo blockchain, String topicName) {
         this.blockTransactionQueue = blockTransactionQueue;
         this.blockchainService = blockchainService;
         this.blockchain = blockchain;

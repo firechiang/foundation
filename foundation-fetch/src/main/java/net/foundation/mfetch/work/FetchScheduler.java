@@ -1,4 +1,4 @@
-package net.foundation.mfetch;
+package net.foundation.mfetch.work;
 
 import net.foundation.mbusiness.domain.BlockchainInfo;
 import net.foundation.mbusiness.service.BlockchainService;
