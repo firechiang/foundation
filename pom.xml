@@ -22,7 +22,7 @@
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <jsoup.version>1.15.2</jsoup.version>
         <guava.version>31.1-jre</guava.version>
-        <bcprov-jdk18on.version>1.71</bcprov-jdk18on.version>
+        <bcprov-jdk18on.version>1.71.1</bcprov-jdk18on.version>
         <commons-collections4.version>4.4</commons-collections4.version>
     </properties>
 
