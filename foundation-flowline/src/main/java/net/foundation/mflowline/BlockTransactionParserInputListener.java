@@ -60,6 +60,7 @@ public class BlockTransactionParserInputListener implements RocketMQListener<Blo
         try {
             BlockchainContractInfo contractInfo = blockchainContractService.queryCacheByAddress(contractAddr);
             if (Objects.isNull(contractInfo.getId())) {
+                contractInfo.setAddr(contractAddr);
                 BlockchainInfo blockchainInfo = blockchainService.queryCacheByChainId(chainId);
                 loadExplorerContract(contractInfo, blockchainInfo.getExplorerUrl());
             } else if (contractInfo.isLoadDisk() && Objects.isNull(contractInfo.getAbiDecoder())) {
