@@ -1,19 +1,29 @@
 package net.foundation.mcrypto.decoder;
 
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 public class AbiDecoder {
 
     private final AbiDefinition abi;
 
     Map<String, AbiDefinition.Entry> methodSignatures = new HashMap<>();
 
-    public AbiDecoder(String jsonStr) {
+    public static final AbiDecoder create(String abi) {
+        try {
+            if(Objects.nonNull(abi)) {
+                return new AbiDecoder(abi);
+            }
+        } catch(Exception e) {
+            log.error("Create Abi Decoder Fail!",e);
+        }
+        return null;
+    }
+
+    private AbiDecoder(String jsonStr) {
         this.abi = AbiDefinition.fromJson(jsonStr);
         for (AbiDefinition.Entry entry : this.abi) {
             String hexEncodedMethodSignature = Hex.toHexString(entry.encodeSignature());

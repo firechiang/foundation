@@ -26,8 +26,7 @@ public class BlockchainServiceImpl extends ServiceImpl<BlockchainMapper, Blockch
         CacheLoader<Integer, BlockchainInfo> cacheLoader = new CacheLoader<>() {
             @Override
             public BlockchainInfo load(Integer chainId) throws Exception {
-                var query = Wrappers.lambdaQuery(Blockchain.class).eq(Blockchain::getChainId,chainId);
-                Blockchain blockchain = service.getOne(query);
+                Blockchain blockchain = service.queryByChainId(chainId);
                 if(Objects.nonNull(blockchain)) {
                     BlockchainInfo info = new BlockchainInfo();
                     BeanUtils.copyProperties(blockchain,info);
@@ -52,5 +51,11 @@ public class BlockchainServiceImpl extends ServiceImpl<BlockchainMapper, Blockch
         }catch(Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Blockchain queryByChainId(Integer chainId) {
+        var query = Wrappers.lambdaQuery(Blockchain.class).eq(Blockchain::getChainId,chainId);
+        return this.getOne(query);
     }
 }

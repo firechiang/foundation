@@ -8,5 +8,9 @@ public interface BlockchainContractService extends IService<BlockchainContract> 
 
     BlockchainContractInfo queryCacheByAddress(String contractAddr);
 
+    BlockchainContract queryByAddress(String contractAddr);
+
     void removeCache(String contractAddr);
+
+    int saveIgnore(BlockchainContract bc);
 }

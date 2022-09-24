@@ -2,4 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.foundation.mbusiness.mapper.BlockchainContractMapper">
 
+    <insert id="insertIgnore" parameterType="net.foundation.mbusiness.domain.BlockchainContract" keyProperty="id" useGeneratedKeys="true">
+        insert ignore into f_blockchain_contract
+            (id,
+             addr,
+             ctype,
+             `name`,
+             decimals,
+             abi,
+             create_time)
+        values
+            (#{id,jdbcType=BIGINT},
+             #{addr,jdbcType=VARCHAR},
+             #{ctype,jdbcType=VARCHAR},
+             #{name,jdbcType=VARCHAR},
+             #{decimals,jdbcType=INTEGER},
+             #{abi,jdbcType=VARCHAR},
+             #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
 </mapper>

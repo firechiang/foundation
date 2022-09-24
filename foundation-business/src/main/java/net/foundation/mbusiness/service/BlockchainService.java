@@ -8,4 +8,5 @@ public interface BlockchainService extends IService<Blockchain> {
 
     BlockchainInfo queryCacheByChainId(Integer chainId);
 
+    Blockchain queryByChainId(Integer chainId);
 }

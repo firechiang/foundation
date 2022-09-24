@@ -31,13 +31,14 @@ public class EthereumSyncWork {
 
     private volatile long oldHeight = 0;
 
-    private int maxInputLength = 1024 * 2;
+    private String topicName;
 
-    public EthereumSyncWork(BlockTransactionQueue blockTransactionQueue, BlockchainService blockchainService, BlockchainInfo blockchain) {
+    public EthereumSyncWork(BlockTransactionQueue blockTransactionQueue, BlockchainService blockchainService, BlockchainInfo blockchain,String topicName) {
         this.blockTransactionQueue = blockTransactionQueue;
         this.blockchainService = blockchainService;
         this.blockchain = blockchain;
         this.api = getEthereumDefaultClient();
+        this.topicName = topicName;
         initOldHeight();
     }
 
@@ -54,7 +55,7 @@ public class EthereumSyncWork {
             if (oldHeight != newHeight) {
                 List<BlockchainTransactionInfo> bts = res.getResult().getTransactions().stream().map(this::toBlockchainTransaction).collect(Collectors.toList());
                 log.info("Ethereum height: {},blockCount: 1,transaction: {}",newHeight,bts.size());
-                blockTransactionQueue.push(bts);
+                blockTransactionQueue.push(this.topicName,bts);
                 saveLastHeight(oldHeight);
             }
             oldHeight++;
@@ -70,7 +71,7 @@ public class EthereumSyncWork {
         bti.setForm(info.getFrom());
         bti.setTo(info.getTo());
         bti.setTxHash(info.getHash());
-        bti.setInput(checkInput(info.getInput()));
+        bti.setInput(info.getInput());
         bti.setAmount(new BigDecimal(api.hexToBigInteger(info.getValue())).divide(blockchain.getDecimalsPow()).setScale(8, RoundingMode.DOWN));
         return bti;
     }
@@ -93,16 +94,6 @@ public class EthereumSyncWork {
             bc.setLastHeight(oldHeight);
             this.blockchainService.updateById(bc);
         }
-    }
-
-    private String checkInput(String input) {
-        if(Objects.nonNull(input)) {
-            int length = input.length();
-            if(length > maxInputLength || (length - 10) % 64 != 0) {
-                return null;
-            }
-        }
-        return input;
     }
 }
 

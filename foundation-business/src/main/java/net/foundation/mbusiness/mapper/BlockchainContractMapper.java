@@ -5,4 +5,6 @@ import net.foundation.mbusiness.domain.BlockchainContract;
 
 public interface BlockchainContractMapper extends BaseMapper<BlockchainContract> {
 
+    int insertIgnore(BlockchainContract bc);
+
 }

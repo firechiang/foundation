@@ -29,15 +29,13 @@ public class BlockchainContractServiceImpl extends ServiceImpl<BlockchainContrac
         CacheLoader<String, BlockchainContractInfo> cacheLoader = new CacheLoader<>() {
             @Override
             public BlockchainContractInfo load(String contractAddr) throws Exception {
-                System.err.println("正在加载缓存!");
-                var query = Wrappers.lambdaQuery(BlockchainContract.class).eq(BlockchainContract::getAddr,contractAddr);
-                BlockchainContract bc = service.getOne(query);
+                BlockchainContract bc = service.queryByAddress(contractAddr);
                 BlockchainContractInfo info = new BlockchainContractInfo();
                 info.setLoadDisk(true);
                 if(Objects.nonNull(bc)) {
                     BeanUtils.copyProperties(bc,info);
                     if(StringUtils.isNoneBlank(bc.getAbi())) {
-                        info.setAbiDecoder(createAbiDecoder(bc.getAbi()));
+                        info.setAbiDecoder(AbiDecoder.create(bc.getAbi()));
                     }
                 }
                 return info;
@@ -65,12 +63,14 @@ public class BlockchainContractServiceImpl extends ServiceImpl<BlockchainContrac
         this.cache.invalidate(contractAddr);
     }
 
-    private AbiDecoder createAbiDecoder(String abi) {
-        try {
-            return new AbiDecoder(abi);
-        } catch(Exception e) {
-            log.error("Create Abi Decoder Fail!",e);
-        }
-        return null;
+    @Override
+    public BlockchainContract queryByAddress(String contractAddr) {
+        var query = Wrappers.lambdaQuery(BlockchainContract.class).eq(BlockchainContract::getAddr,contractAddr);
+        return this.getOne(query);
+    }
+
+    @Override
+    public int saveIgnore(BlockchainContract bc) {
+        return this.baseMapper.insertIgnore(bc);
     }
 }

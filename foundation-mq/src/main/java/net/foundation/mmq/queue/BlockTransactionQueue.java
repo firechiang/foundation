@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface BlockTransactionQueue {
 
-    void push(List<BlockchainTransactionInfo> infos);
+    void push(String topic,List<BlockchainTransactionInfo> infos);
+
+    void push(String topic,BlockchainTransactionInfo info);
 
 }

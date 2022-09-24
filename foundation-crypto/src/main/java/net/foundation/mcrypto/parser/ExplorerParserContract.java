@@ -20,6 +20,18 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
     }
 
     /**
+     * 解析合约Abi
+     * @param explorerUrl
+     * @param addr
+     * @return
+     */
+    public String parseAbi(String explorerUrl,String addr) {
+        String url = String.join("/",explorerUrl,"address",addr);
+        Document document = getBrowser(url);
+        return parseAbi(document);
+    }
+
+    /**
      * 解析Address信息
      * @param addr
      * @param info
@@ -28,7 +40,7 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
         String url = String.join("/",explorerUrl,"address",addr);
         Document document = getBrowser(url);
         // 解析合约Abi
-        parseAbi(document,info);
+        info.setAbi(parseAbi(document));
         Elements elements = parseTables(document);
         if(Objects.nonNull(elements)) {
             // 解析合约名称
@@ -121,12 +133,12 @@ public class ExplorerParserContract extends ExplorerParserAbstract implements Ex
     /**
      * 解析合约Abi
      * @param document
-     * @param info
      */
-    private void parseAbi(Document document,ContractInfo info) {
+    private String parseAbi(Document document) {
         Element abiEl = document.selectFirst("#js-copytextarea2");
         if(Objects.nonNull(abiEl)) {
-            info.setAbi(abiEl.text());
+            return abiEl.text();
         }
+        return null;
     }
 }
