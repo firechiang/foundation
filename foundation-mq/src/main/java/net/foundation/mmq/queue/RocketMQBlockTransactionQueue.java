@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,23 +26,27 @@ public class RocketMQBlockTransactionQueue implements BlockTransactionQueue {
 
     @Override
     public void push(String topic,List<BlockchainTransactionInfo> infos) {
-        List<Message<BlockchainTransactionInfo>> msgs = infos.stream()
-                                                             .map(this::toMsg)
-                                                             .collect(Collectors.toList());
-        int totalSize = msgs.size();
-        int totalPage = (totalSize - 1) / this.pageSize + 1;
-        for(int i=0; i<totalPage; i++) {
-            int start = i * this.pageSize;
-            int end = (i + 1) == totalPage ? totalSize : (start + this.pageSize);
-            List<Message<BlockchainTransactionInfo>> subList = msgs.subList(start, end);
-            this.rocketMQTemplate.syncSend(topic,subList);
+        if(!CollectionUtils.isEmpty(infos)) {
+            List<Message<BlockchainTransactionInfo>> msgs = infos.stream()
+                                                                 .map(this::toMsg)
+                                                                 .collect(Collectors.toList());
+            int totalSize = msgs.size();
+            int totalPage = (totalSize - 1) / this.pageSize + 1;
+            for(int i=0; i<totalPage; i++) {
+                int start = i * this.pageSize;
+                int end = (i + 1) == totalPage ? totalSize : (start + this.pageSize);
+                List<Message<BlockchainTransactionInfo>> subList = msgs.subList(start, end);
+                this.rocketMQTemplate.syncSend(topic,subList);
+            }
         }
     }
 
     @Override
     public void push(String topic,BlockchainTransactionInfo info) {
-        Message<BlockchainTransactionInfo> msg = toMsg(info);
-        this.rocketMQTemplate.syncSend(topic,msg);
+        if(Objects.nonNull(info)) {
+            Message<BlockchainTransactionInfo> msg = toMsg(info);
+            this.rocketMQTemplate.syncSend(topic,msg);
+        }
     }
 
     private Message<BlockchainTransactionInfo> toMsg(BlockchainTransactionInfo info) {

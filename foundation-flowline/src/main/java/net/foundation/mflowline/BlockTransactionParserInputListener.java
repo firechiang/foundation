@@ -1,11 +1,9 @@
 package net.foundation.mflowline;
 
 import lombok.extern.slf4j.Slf4j;
-import net.foundation.mbusiness.domain.BlockchainContract;
-import net.foundation.mbusiness.domain.BlockchainContractInfo;
-import net.foundation.mbusiness.domain.BlockchainInfo;
-import net.foundation.mbusiness.domain.BlockchainTransactionInfo;
+import net.foundation.mbusiness.domain.*;
 import net.foundation.mbusiness.service.BlockchainContractService;
+import net.foundation.mbusiness.service.BlockchainContractTypeService;
 import net.foundation.mbusiness.service.BlockchainService;
 import net.foundation.mcrypto.decoder.AbiDecoder;
 import net.foundation.mcrypto.decoder.DecodedFunctionCall;
@@ -45,6 +43,9 @@ public class BlockTransactionParserInputListener implements RocketMQListener<Blo
     @Autowired
     private BlockchainContractService blockchainContractService;
 
+    @Autowired
+    private BlockchainContractTypeService blockchainContractTypeService;
+
     @Override
     public void onMessage(BlockchainTransactionInfo bti) {
         if(Objects.nonNull(bti.getInput())) {
@@ -59,10 +60,12 @@ public class BlockTransactionParserInputListener implements RocketMQListener<Blo
     private BlockchainContractInfo getContractInfo(Integer chainId,String contractAddr) {
         try {
             BlockchainContractInfo contractInfo = blockchainContractService.queryCacheByAddress(contractAddr);
+            // 数据库不存在合约信息
             if (Objects.isNull(contractInfo.getId())) {
                 contractInfo.setAddr(contractAddr);
                 BlockchainInfo blockchainInfo = blockchainService.queryCacheByChainId(chainId);
                 loadExplorerContract(contractInfo, blockchainInfo.getExplorerUrl());
+            // 数据库存在合约信息但是没有ABI
             } else if (contractInfo.isLoadDisk() && Objects.isNull(contractInfo.getAbiDecoder())) {
                 BlockchainInfo blockchainInfo = blockchainService.queryCacheByChainId(chainId);
                 loadExplorerABI(contractInfo, blockchainInfo.getExplorerUrl());
@@ -104,15 +107,32 @@ public class BlockTransactionParserInputListener implements RocketMQListener<Blo
 
     private void decoderInput(BlockchainTransactionInfo bti,BlockchainContractInfo bci) {
         try {
-            AbiDecoder abiDecoder = bci.getAbiDecoder();
-            if (Objects.nonNull(bci.getAbiDecoder())) {
-                DecodedFunctionCall decodedFunctionCall = abiDecoder.decodeFunctionCall(bti.getInput());
-                if(Objects.nonNull(decodedFunctionCall)) {
-                    bti.setMethod(decodedFunctionCall.getName());
-                }
+            DecodedFunctionCall decodedFunction = getContractTypeDecoder(bci.getCtype(), bti.getInput());
+            if(Objects.isNull(decodedFunction)) {
+                decodedFunction = getContractDecoder(bci.getAbiDecoder(),bti.getInput());
+            }
+            if(Objects.nonNull(decodedFunction)) {
+                bti.setMethod(decodedFunction.getName());
             }
         } catch(Exception e) {
             log.error("Decoder blockchain transaction input!",e);
         }
+    }
+
+    private DecodedFunctionCall getContractTypeDecoder(String ctype,String input) {
+        if(Objects.nonNull(ctype)) {
+            BlockchainContractTypeInfo bcti = blockchainContractTypeService.queryCacheByName(ctype);
+            if(Objects.nonNull(bcti) && Objects.nonNull(bcti.getAbiDecoder())) {
+                return bcti.getAbiDecoder().decodeFunctionCall(input);
+            }
+        }
+        return null;
+    }
+
+    private DecodedFunctionCall getContractDecoder(AbiDecoder abiDecoder,String input) {
+        if (Objects.nonNull(abiDecoder)) {
+            return abiDecoder.decodeFunctionCall(input);
+        }
+        return null;
     }
 }
