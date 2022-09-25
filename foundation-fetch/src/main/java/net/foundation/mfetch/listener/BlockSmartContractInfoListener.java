@@ -35,7 +35,7 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
     @Autowired
     private BlockchainContractService blockchainContractService;
 
-    private long sleepTime = 1500;
+    private long sleepTime = 2000;
 
     @Override
     public void onMessage(BlockchainTransactionInfo bti) {
