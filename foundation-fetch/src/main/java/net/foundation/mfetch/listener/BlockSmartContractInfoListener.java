@@ -35,6 +35,8 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
     @Autowired
     private BlockchainContractService blockchainContractService;
 
+    private long sleepTime = 600;
+
     @Override
     public void onMessage(BlockchainTransactionInfo bti) {
         try {
@@ -48,14 +50,14 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
                     BlockchainInfo blockchainInfo = blockchainService.queryCacheByChainId(bti.getChainId());
                     // 解析合约地址信息
                     if(Objects.isNull(bci.getName()) || Objects.isNull(bci.getAbiDecoder())) {
-                        TimeUnit.MILLISECONDS.sleep(500);
+                        TimeUnit.MILLISECONDS.sleep(sleepTime);
                         ContractAddressInfo addressInfo = epc.parseAddress(blockchainInfo.getExplorerUrl(),contractAddr);
                         bc.setName(addressInfo.getName());
                         bc.setAbi(addressInfo.getAbi());
                     }
                     // 解析合约Token信息
                     if(Objects.isNull(bci.getDecimals())) {
-                        TimeUnit.MILLISECONDS.sleep(500);
+                        TimeUnit.MILLISECONDS.sleep(sleepTime);
                         ContractTokenInfo tokenInfo = epc.parseToken(blockchainInfo.getExplorerUrl(),contractAddr);
                         bc.setDecimals(tokenInfo.getDecimals());
                         bc.setCtype(tokenInfo.getCtype());
