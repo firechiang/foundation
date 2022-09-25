@@ -26,7 +26,7 @@ import static net.foundation.mmq.MQConstant.Path_Blockchain_Transaction_Topic_1;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = Path_Blockchain_Transaction_Topic_1, consumerGroup = "blockchain_transaction_1_smart-contract-info")
+@RocketMQMessageListener(topic = Path_Blockchain_Transaction_Topic_1, consumerGroup = "blockchain_transaction_1_smart-contract-info",consumeThreadMax = 1)
 public class BlockSmartContractInfoListener implements RocketMQListener<BlockchainTransactionInfo> {
 
     @Autowired
@@ -35,7 +35,7 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
     @Autowired
     private BlockchainContractService blockchainContractService;
 
-    private long sleepTime = 2000;
+    private long sleepTime = 1000;
 
     @Override
     public void onMessage(BlockchainTransactionInfo bti) {
@@ -44,6 +44,7 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
                 String contractAddr = bti.getTo();
                 BlockchainContractInfo bci = blockchainContractService.queryCacheByAddress(contractAddr);
                 if (bci.isLoadDisk()) {
+                    log.info("开始消费智能合约："+contractAddr);
                     BlockchainContract bc = new BlockchainContract();
                     bc.setId(bci.getId());
                     ExplorerParserContract epc = new ExplorerParserContract();
@@ -75,7 +76,7 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
                 }
             }
         } catch(Exception e) {
-            log.error("Get blockchain contract info!",e);
+            log.error("Get blockchain contract info!"+bti.getTo(),e);
         }
     }
 }
