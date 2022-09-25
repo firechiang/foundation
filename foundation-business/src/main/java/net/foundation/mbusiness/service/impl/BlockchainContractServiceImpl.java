@@ -43,7 +43,7 @@ public class BlockchainContractServiceImpl extends ServiceImpl<BlockchainContrac
         };
         this.cache = CacheBuilder.newBuilder()
                                  .concurrencyLevel(50)
-                                 .expireAfterWrite(3, TimeUnit.HOURS)
+                                 .expireAfterWrite(3, TimeUnit.MINUTES)
                                  .initialCapacity(200)
                                  .maximumSize(1000)
                                  .build(cacheLoader);
