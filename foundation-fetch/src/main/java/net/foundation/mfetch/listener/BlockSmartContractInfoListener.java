@@ -57,7 +57,7 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
                         bc.setAbi(addressInfo.getAbi());
                     }
                     // 解析合约Token信息
-                    if(Objects.isNull(bci.getDecimals())) {
+                    if(Objects.isNull(bci.getDecimals()) && Objects.isNull(bci.getCtype())) {
                         TimeUnit.MILLISECONDS.sleep(sleepTime);
                         ContractTokenInfo tokenInfo = epc.parseToken(blockchainInfo.getExplorerUrl(),contractAddr);
                         bc.setDecimals(tokenInfo.getDecimals());
