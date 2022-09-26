@@ -31,6 +31,7 @@ public abstract class SolidityType {
         if ("bytes".equals(typeName)) return new BytesType();
         if ("function".equals(typeName)) return new FunctionType();
         if (typeName.startsWith("bytes")) return new Bytes32Type(typeName);
+        if("tuple".equals(typeName)) return new TupleType();
         throw new RuntimeException("Unknown type: " + typeName);
     }
 
@@ -224,6 +225,48 @@ public abstract class SolidityType {
         @Override
         public boolean isDynamicType() {
             return true;
+        }
+    }
+
+    public static class TupleType extends SolidityType {
+
+        public TupleType() {
+            super("tuple");
+        }
+
+        @Override
+        public byte[] encode(Object value) {
+            List l = new ArrayList();
+            if (value.getClass().isArray()) {
+                l = new ArrayList<>();
+                for (int i = 0; i < Array.getLength(value); i++) {
+                    l.add(Array.get(value, i));
+                }
+            } else if (value instanceof List) {
+                l = (List) value;
+            }
+            byte[][] elems;
+            elems = new byte[l.size() * 2][];
+            int offset = l.size() * Int32Size;
+            for (int i = 0; i < l.size(); i++) {
+                elems[i] = IntType.encodeInt(offset);
+                byte[] encoded = this.encode(l.get(i));
+                elems[l.size() + i] = encoded;
+                offset += Int32Size * ((encoded.length - 1) / Int32Size + 1);
+            }
+            return ByteUtil.merge(IntType.encodeInt(l.size()), ByteUtil.merge(elems));
+        }
+
+        @Override
+        public Object decode(byte[] encoded, int offset) {
+            int origOffset = offset;
+            int len = IntType.decodeInt(encoded, offset).intValue();
+            Object[] ret = new Object[len];
+            for (int i = 0; i < len; i++) {
+                ret[i] = this.decode(encoded, offset + IntType.decodeInt(encoded, origOffset).intValue());
+                origOffset += this.getFixedSize();
+            }
+            return ret;
         }
     }
 
