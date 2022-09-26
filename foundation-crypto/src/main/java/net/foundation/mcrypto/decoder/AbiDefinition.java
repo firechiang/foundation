@@ -98,6 +98,9 @@ public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
                 case event:
                     result = new Event(anonymous, name, inputs, outputs);
                     break;
+                case error:
+                    result = new Error(name,inputs, outputs);
+                    break;
             }
 
             return result;
@@ -125,7 +128,8 @@ public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
             function,
             event,
             fallback,
-            receive
+            receive,
+            error
         }
 
         @Data
@@ -170,6 +174,21 @@ public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
 
         public String formatSignature(String contractName) {
             return format("function %s(%s)", contractName, join(inputs, ", "));
+        }
+    }
+
+    public static class Error extends Entry {
+
+        public Error(String name,List<Param> inputs, List<Param> outputs) {
+            super(null, null, name, inputs, outputs, Type.constructor, false);
+        }
+
+        public List<?> decode(byte[] encoded) {
+            return Param.decodeList(inputs, encoded);
+        }
+
+        public String formatSignature(String errorName) {
+            return format("function %s(%s)", errorName, join(inputs, ", "));
         }
     }
 
