@@ -92,6 +92,7 @@ public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
                     break;
                 case function:
                 case fallback:
+                case receive:
                     result = new Function(constant, name, inputs, outputs, payable);
                     break;
                 case event:
@@ -123,7 +124,8 @@ public class AbiDefinition extends ArrayList<AbiDefinition.Entry> {
             constructor,
             function,
             event,
-            fallback
+            fallback,
+            receive
         }
 
         @Data
