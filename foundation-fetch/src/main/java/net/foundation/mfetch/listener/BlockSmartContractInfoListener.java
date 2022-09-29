@@ -47,21 +47,23 @@ public class BlockSmartContractInfoListener implements RocketMQListener<Blockcha
                     log.info("开始消费智能合约："+contractAddr);
                     BlockchainContract bc = new BlockchainContract();
                     bc.setId(bci.getId());
-                    ExplorerParserContract epc = new ExplorerParserContract();
                     BlockchainInfo blockchainInfo = blockchainService.queryCacheByChainId(bti.getChainId());
+                    ExplorerParserContract epc = new ExplorerParserContract(blockchainInfo.getExplorerUrl());
                     // 解析合约地址信息
                     if(Objects.isNull(bci.getName()) || Objects.isNull(bci.getAbiDecoder())) {
                         TimeUnit.MILLISECONDS.sleep(sleepTime);
-                        ContractAddressInfo addressInfo = epc.parseAddress(blockchainInfo.getExplorerUrl(),contractAddr);
+                        ContractAddressInfo addressInfo = epc.parseAddress(contractAddr);
                         bc.setName(addressInfo.getName());
                         bc.setAbi(addressInfo.getAbi());
+                        bc.setLogo(addressInfo.getLogo());
                     }
                     // 解析合约Token信息
                     if(Objects.isNull(bci.getDecimals()) && Objects.isNull(bci.getCtype())) {
                         TimeUnit.MILLISECONDS.sleep(sleepTime);
-                        ContractTokenInfo tokenInfo = epc.parseToken(blockchainInfo.getExplorerUrl(),contractAddr);
+                        ContractTokenInfo tokenInfo = epc.parseToken(contractAddr);
                         bc.setDecimals(tokenInfo.getDecimals());
                         bc.setCtype(tokenInfo.getCtype());
+                        bc.setOfficialSite(tokenInfo.getOfficialSite());
                     }
                     if(Objects.nonNull(bc.getName()) || Objects.nonNull(bc.getAbi()) || Objects.nonNull(bc.getDecimals())) {
                         if(Objects.isNull(bc.getId())) {

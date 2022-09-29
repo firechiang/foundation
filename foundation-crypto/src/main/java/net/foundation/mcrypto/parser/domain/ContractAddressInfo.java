@@ -7,5 +7,7 @@ public class ContractAddressInfo {
 
     private String name;
 
+    private String logo;
+
     private String abi;
 }

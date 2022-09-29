@@ -8,16 +8,20 @@
              addr,
              ctype,
              `name`,
+             logo,
              decimals,
              abi,
+             official_site,
              create_time)
         values
             (#{id,jdbcType=BIGINT},
              #{addr,jdbcType=VARCHAR},
              #{ctype,jdbcType=VARCHAR},
              #{name,jdbcType=VARCHAR},
+             #{logo,jdbcType=VARCHAR},
              #{decimals,jdbcType=INTEGER},
              #{abi,jdbcType=VARCHAR},
+             #{officialSite,jdbcType=VARCHAR},
              #{createTime,jdbcType=TIMESTAMP})
     </insert>
 

@@ -25,6 +25,10 @@ public class BlockchainContract {
      */
     private String name;
     /**
+     * Logo
+     */
+    private String logo;
+    /**
      * 合约类型
      */
     private String ctype;
@@ -36,6 +40,10 @@ public class BlockchainContract {
      * 合约编码
      */
     private String abi;
+    /**
+     * 官网
+     */
+    private String officialSite;
     /**
      * 创建时间
      */

@@ -7,5 +7,7 @@ public class ContractTokenInfo {
 
     private String ctype;
 
+    private String officialSite;
+
     private Integer decimals;
 }
